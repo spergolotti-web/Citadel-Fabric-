@@ -3,24 +3,25 @@ plugins {
 	id 'maven-publish'
 }
 
-group = "com.yourgroup"
-version = "1.20.1-1.0.0"
+version = project.mod_version
+group = project.maven_group
 
 base {
-	archivesName = "citadel"
+	archivesName = project.archives_base_name
 }
 
 repositories {
-	maven { url 'https://maven.terraformersmc.com/' }
+	// Add repositories to retrieve artifacts from in here.
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 }
 
 loom {
+	accessWidenerPath = file("src/main/resources/citadel.accesswidener")
 	mods {
 		"citadel" {
 			sourceSet sourceSets.main
 		}
 	}
-	accessWidenerPath = file("src/main/resources/citadel.accesswidener")
 }
 
 dependencies {
@@ -31,11 +32,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	compileOnly "org.jetbrains:annotations:23.0.0"
-	// Video playback (lectern / client)
-	implementation "org.jcodec:jcodec:0.2.5"
-	implementation "org.jcodec:jcodec-javase:0.2.5"
-	implementation "com.tianscar.javasound:jaad:0.9.4"
+
+	// Video (jcodec, jaad) - optional compile-only for Video.java (packages net.sourceforge.jaad, org.jcodec)
+	compileOnly "org.jcodec:jcodec:0.2.5"
+	compileOnly "de.sfuhrm:jaad:0.8.7"
 }
 
 processResources {
@@ -47,7 +47,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {
@@ -56,8 +56,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
