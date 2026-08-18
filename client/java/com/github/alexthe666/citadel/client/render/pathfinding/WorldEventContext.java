@@ -36,7 +36,7 @@ public class WorldEventContext {
         this.mainHandItem = this.clientPlayer != null ? this.clientPlayer.getMainHandItem() : ItemStack.EMPTY;
         this.clientRenderDist = Minecraft.getInstance().options.renderDistance().get();
 
-        final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+        final Vec3 cameraPos = Minecraft.getInstance().gameRenderer.mainCamera().position();
         this.poseStack.pushPose();
         this.poseStack.translate(-cameraPos.x(), -cameraPos.y(), -cameraPos.z());
     }

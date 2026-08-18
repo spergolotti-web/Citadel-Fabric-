@@ -154,7 +154,7 @@ public class ClientProxy extends ServerProxy {
     }
 
     public void citadelPostEffectAfterSky(Object event) {
-        PostEffectRegistry.clearAndBindWrite(Minecraft.getInstance().getMainRenderTarget());
+        PostEffectRegistry.clearAndBindWrite(Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 
     public void citadelPostEffectAfterLevel(Object event) {
@@ -205,7 +205,7 @@ public class ClientProxy extends ServerProxy {
     }
 
     public boolean onKeyPressed(int keyCode) {
-        if (Minecraft.getInstance().screen instanceof TitleScreen && aprilFoolsTetrisGame != null && aprilFoolsTetrisGame.isStarted()) {
+        if (Minecraft.getInstance().gui.screen() instanceof TitleScreen && aprilFoolsTetrisGame != null && aprilFoolsTetrisGame.isStarted()) {
             if (keyCode == InputConstants.KEY_LEFT || keyCode == InputConstants.KEY_RIGHT || keyCode == InputConstants.KEY_DOWN || keyCode == InputConstants.KEY_UP) {
                 return true;
             }
@@ -220,7 +220,7 @@ public class ClientProxy extends ServerProxy {
         }
         if (!isGamePaused() && CitadelConstants.isAprilFools()) {
             if (aprilFoolsTetrisGame != null) {
-                if (Minecraft.getInstance().screen instanceof TitleScreen) {
+                if (Minecraft.getInstance().gui.screen() instanceof TitleScreen) {
                     aprilFoolsTetrisGame.tick();
                 } else {
                     aprilFoolsTetrisGame.reset();

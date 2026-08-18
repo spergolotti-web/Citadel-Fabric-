@@ -1,5 +1,6 @@
 package com.github.alexthe666.citadel.client.shader;
 
+import com.mojang.blaze3d.GpuFormat;
 import com.github.alexthe666.citadel.Citadel;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
@@ -9,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelTargetBundle;
 import net.minecraft.client.renderer.PostChain;
 import net.minecraft.resources.Identifier;
+import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +41,7 @@ public class PostEffectRegistry {
         int h = minecraft.getWindow().getHeight();
         for (Identifier id : registry) {
             PostChain postChain = minecraft.getShaderManager().getPostChain(id, LevelTargetBundle.MAIN_TARGETS);
-            TextureTarget renderTarget = new TextureTarget("Citadel post-effect " + id, w, h, false);
+            TextureTarget renderTarget = new TextureTarget("Citadel post-effect " + id, w, h, false, GpuFormat.RGBA8_UNORM);
             if (postChain == null) {
                 Citadel.LOGGER.warn("Failed to load post chain: {}", id);
                 renderTarget.destroyBuffers();
@@ -70,18 +72,18 @@ public class PostEffectRegistry {
 
     private static void clearColor(RenderTarget target) {
         if (target != null && target.getColorTexture() != null) {
-            RenderSystem.getDevice().createCommandEncoder().clearColorTexture(target.getColorTexture(), 0);
+            RenderSystem.getDevice().createCommandEncoder().clearColorTexture(target.getColorTexture(), new Vector4f(0.0F, 0.0F, 0.0F, 0.0F));
         }
     }
 
     public static void blitEffects() {
         Minecraft minecraft = Minecraft.getInstance();
-        RenderTarget mainTarget = minecraft.getMainRenderTarget();
+        RenderTarget mainTarget = minecraft.gameRenderer.mainRenderTarget();
         for (PostEffect postEffect : postEffects.values()) {
             if (postEffect.postChain != null && postEffect.isEnabled()) {
                 RenderTarget effectTarget = postEffect.getRenderTarget();
                 if (effectTarget != null && mainTarget.getColorTextureView() != null) {
-                    effectTarget.blitAndBlendToTexture(mainTarget.getColorTextureView());
+                    effectTarget.blitAndBlendToTexture(effectTarget.getColorTextureView(), mainTarget.getColorTextureView());
                     clearColor(effectTarget);
                 }
                 postEffect.setEnabled(false);

@@ -13,6 +13,6 @@ public class OutlineBufferSourceMixin {
 
     @Inject(method = "doEntityOutline", at = @At("HEAD"))
     private void citadel_beforeDoEntityOutline(CallbackInfo ci) {
-        PostEffectRegistry.processEffects(Minecraft.getInstance().getMainRenderTarget());
+        PostEffectRegistry.processEffects(Minecraft.getInstance().gameRenderer.mainRenderTarget());
     }
 }

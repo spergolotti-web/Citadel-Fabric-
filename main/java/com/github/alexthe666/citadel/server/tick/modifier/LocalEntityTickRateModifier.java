@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -25,7 +26,7 @@ public class LocalEntityTickRateModifier extends LocalTickRateModifier {
     public LocalEntityTickRateModifier(CompoundTag tag) {
         super(tag);
         this.entityId = tag.getIntOr("EntityId", -1);
-        this.expectedEntityType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(tag.getStringOr("EntityType", BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG).toString())));
+        this.expectedEntityType = BuiltInRegistries.ENTITY_TYPE.getValue(Identifier.parse(tag.getStringOr("EntityType", BuiltInRegistries.ENTITY_TYPE.getKey(EntityTypes.PIG).toString())));
     }
 
     @Override

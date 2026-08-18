@@ -901,13 +901,13 @@ public class WorldRenderMacros {
         }
 
         final int cap = text.size();
-        Vec3 cam = Minecraft.getInstance().gameRenderer.getMainCamera().position();
+        Vec3 cam = Minecraft.getInstance().gameRenderer.mainCamera().position();
         if (cap > 0 && cam.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) <= MAX_DEBUG_TEXT_RENDER_DIST_SQUARED) {
             final Font fontrenderer = Minecraft.getInstance().font;
 
             matrixStack.pushPose();
             matrixStack.translate(pos.getX() + 0.5d, pos.getY() + 0.75d, pos.getZ() + 0.5d);
-            matrixStack.mulPose(Minecraft.getInstance().gameRenderer.getMainCamera().rotation());
+            matrixStack.mulPose(Minecraft.getInstance().gameRenderer.mainCamera().rotation());
             matrixStack.scale(-0.014f, -0.014f, 0.014f);
             matrixStack.translate(0.0d, 18.0d, 0.0d);
 
