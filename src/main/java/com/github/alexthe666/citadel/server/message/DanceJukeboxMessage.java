@@ -22,13 +22,19 @@ public class DanceJukeboxMessage {
     }
 
     public static DanceJukeboxMessage read(FriendlyByteBuf buf) {
-        return new DanceJukeboxMessage(buf.readInt(), buf.readBoolean(), buf.readBlockPos());
+        int entityId = buf.readInt();
+        boolean dance = buf.readBoolean();
+        BlockPos pos = buf.readBoolean() ? buf.readBlockPos() : BlockPos.ZERO;
+        return new DanceJukeboxMessage(entityId, dance, pos);
     }
 
     public static void write(DanceJukeboxMessage message, FriendlyByteBuf buf) {
         buf.writeInt(message.entityID);
         buf.writeBoolean(message.dance);
-        buf.writeBlockPos(message.jukeBox);
+        buf.writeBoolean(message.jukeBox != null);
+        if (message.jukeBox != null) {
+            buf.writeBlockPos(message.jukeBox);
+        }
     }
 
     public static class Handler {

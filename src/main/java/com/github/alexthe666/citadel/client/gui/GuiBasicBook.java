@@ -327,9 +327,8 @@ public abstract class GuiBasicBook extends Screen {
     private Recipe getRecipeByName(String registryName) {
         try {
             RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-            if (manager.byKey(ResourceLocation.parse(registryName)).isPresent()) {
-                return manager.byKey(ResourceLocation.parse(registryName)).map(holder -> holder.value()).orElse(null);
-            }
+            ResourceLocation id = ResourceLocation.parse(registryName);
+            return manager.byKey(id).map(holder -> holder.value()).orElse(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -430,7 +429,7 @@ public abstract class GuiBasicBook extends Screen {
                 Entity model = null;
                 EntityType type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(data.getEntity()));
                 if (type != null) {
-                    model = renderedEntites.putIfAbsent(data.getEntity(), type.create(Minecraft.getInstance().level));
+                    model = renderedEntites.computeIfAbsent(data.getEntity(), key -> type.create(Minecraft.getInstance().level));
                 }
                 if (model != null) {
                     float scale = (float) data.getScale();
