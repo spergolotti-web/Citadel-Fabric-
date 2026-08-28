@@ -1,41 +1,38 @@
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+	id 'fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
-group = "com.yourgroup"
-version = "1.20.1-1.0.0"
+version = findProperty('citadel_version') ?: project.mod_version
+group = rootProject.maven_group
 
 base {
-	archivesName = "citadel"
+	archivesName = "citadelfabric"
 }
 
 repositories {
-	maven { url 'https://maven.terraformersmc.com/' }
+	// Add repositories to retrieve artifacts from in here.
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 }
 
 loom {
+	accessWidenerPath = file("src/main/resources/citadel.accesswidener")
 	mods {
 		"citadel" {
 			sourceSet sourceSets.main
 		}
 	}
-	accessWidenerPath = file("src/main/resources/citadel.accesswidener")
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 	mappings loom.officialMojangMappings()
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc:fabric-loader:${rootProject.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	compileOnly "org.jetbrains:annotations:23.0.0"
-	// Video playback (lectern / client)
-	implementation "org.jcodec:jcodec:0.2.5"
-	implementation "org.jcodec:jcodec-javase:0.2.5"
-	implementation "com.tianscar.javasound:jaad:0.9.4"
+	// Video (jcodec, jaad) - optional compile-only for Video.java (packages net.sourceforge.jaad, org.jcodec)
+	compileOnly "org.jcodec:jcodec:0.2.5"
+	compileOnly "de.sfuhrm:jaad:0.8.7"
 }
 
 processResources {
@@ -63,8 +60,11 @@ java {
 jar {
 	inputs.property "archivesName", project.base.archivesName
 
-	from("LICENSE") {
-		rename { "${it}_${inputs.properties.archivesName}"}
+	def licenseFile = file("LICENSE")
+	if (licenseFile.exists()) {
+		from(licenseFile) {
+			rename { "${it}_${inputs.properties.archivesName}"}
+		}
 	}
 }
 
@@ -83,5 +83,11 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+	}
+}
+
+afterEvaluate {
+	tasks.matching { it.name == 'runClient' || it.name == 'runServer' }.configureEach {
+		enabled = false
 	}
 }

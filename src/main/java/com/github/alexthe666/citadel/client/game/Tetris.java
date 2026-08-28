@@ -3,6 +3,7 @@ package com.github.alexthe666.citadel.client.game;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -265,11 +266,12 @@ public class Tetris {
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         float f = size * 0.5F;
-        bufferbuilder.vertex(-f + offsetX, f + offsetY, 80.0D).uv(sprite.getU0(), sprite.getV1()).endVertex();
-        bufferbuilder.vertex(f + offsetX, f + offsetY, 80.0D).uv(sprite.getU1(), sprite.getV1()).endVertex();
-        bufferbuilder.vertex(f + offsetX, -f + offsetY, 80.0D).uv(sprite.getU1(), sprite.getV0()).endVertex();
-        bufferbuilder.vertex(-f + offsetX, -f + offsetY, 80.0D).uv(sprite.getU0(), sprite.getV0()).endVertex();
-        tesselator.end();
+        float z = 80.0F;
+        bufferbuilder.vertex(-f + offsetX, f + offsetY, z).uv(sprite.getU0(), sprite.getV1()).endVertex();
+        bufferbuilder.vertex(f + offsetX, f + offsetY, z).uv(sprite.getU1(), sprite.getV1()).endVertex();
+        bufferbuilder.vertex(f + offsetX, -f + offsetY, z).uv(sprite.getU1(), sprite.getV0()).endVertex();
+        bufferbuilder.vertex(-f + offsetX, -f + offsetY, z).uv(sprite.getU0(), sprite.getV0()).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
 
     }
 

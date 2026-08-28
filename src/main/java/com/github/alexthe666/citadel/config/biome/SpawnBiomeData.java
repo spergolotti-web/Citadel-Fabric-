@@ -3,10 +3,9 @@ package com.github.alexthe666.citadel.config.biome;
 import com.github.alexthe666.citadel.Citadel;
 import com.google.gson.*;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.biome.Biome;
 
@@ -88,19 +87,9 @@ public class SpawnBiomeData {
                 return false;
             } else {
                 if (type == BiomeEntryType.BIOME_TAG) {
-                    if (biomeHolder != null) {
-                        try {
-                            java.lang.reflect.Field rootField = BuiltInRegistries.class.getDeclaredField("ROOT");
-                            rootField.setAccessible(true);
-                            @SuppressWarnings("unchecked")
-                            Registry<Registry<?>> root = (Registry<Registry<?>>) rootField.get(null);
-                            Registry<Biome> biomeRegistry = (Registry<Biome>) root.get((net.minecraft.resources.ResourceKey<Registry<?>>) (Object) Registries.BIOME);
-                            if (biomeRegistry != null && biomeRegistry.getTags().anyMatch(entry -> entry.getSecond().contains(biomeHolder) && entry.getFirst().location().toString().equals(value))) {
-                                return !negate;
-                            }
-                        } catch (Exception e) {
-                            Citadel.LOGGER.debug("Could not get biome registry for tag check", e);
-                        }
+                    if (biomeHolder != null && value != null) {
+                        boolean matched = biomeHasTag(biomeHolder, value) || biomeHasTag(biomeHolder, remapLegacyTag(value));
+                        return negate ? !matched : matched;
                     }
                     return negate;
                 } else {
@@ -110,6 +99,39 @@ public class SpawnBiomeData {
                     return negate;
                 }
             }
+        }
+
+        private boolean biomeHasTag(Holder<Biome> biomeHolder, String tagId) {
+            ResourceLocation loc = ResourceLocation.tryParse(tagId.contains(":") ? tagId : "minecraft:" + tagId);
+            if (loc == null) {
+                return false;
+            }
+            return biomeHolder.is(TagKey.create(Registries.BIOME, loc));
+        }
+
+        private String remapLegacyTag(String id) {
+            if (!id.startsWith("forge:")) {
+                return id;
+            }
+            String path = id.substring("forge:".length());
+            return switch (path) {
+                case "is_swamp" -> "c:is_swamp";
+                case "is_plains" -> "c:is_plains";
+                case "is_cold" -> "c:is_cold";
+                case "is_cold/overworld" -> "c:is_cold/overworld";
+                case "is_hot/overworld" -> "c:is_hot/overworld";
+                case "is_dry/overworld" -> "c:is_dry/overworld";
+                case "is_sandy" -> "c:is_sandy";
+                case "is_snowy" -> "c:is_snowy";
+                case "is_mushroom" -> "c:is_mushroom";
+                case "is_rare" -> "c:is_rare";
+                case "is_dense/overworld" -> "c:is_dense_vegetation/overworld";
+                case "is_coniferous" -> "c:is_tree/coniferous";
+                case "is_wasteland" -> "c:is_wasteland";
+                case "is_plateau" -> "c:is_plateau";
+                case "no_default_monsters" -> "c:no_default_monsters";
+                default -> id;
+            };
         }
     }
 }

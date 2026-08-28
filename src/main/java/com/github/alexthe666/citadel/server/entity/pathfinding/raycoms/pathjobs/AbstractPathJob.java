@@ -1320,8 +1320,8 @@ public abstract class AbstractPathJob implements Callable<Path> {
 
                 // TODO: I'd be cool if dragons could squash multiple snow layers when walking over them
                 if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.125 && !isLiquid((block)) && (block.getBlock() != Blocks.SNOW || block.getValue(SnowLayerBlock.LAYERS) == 1)) {
-                    final BlockPathTypes pathType = com.github.alexthe666.citadel.server.entity.collision.CustomCollisionsNodeProcessor.getBlockPathTypeFromState(block, world, pos);
-                    return pathType == null || (pathType != BlockPathTypes.DANGER_FIRE && pathType != BlockPathTypes.DANGER_OTHER && pathType != BlockPathTypes.DANGER_POWDER_SNOW && pathType != BlockPathTypes.DAMAGE_FIRE && pathType != BlockPathTypes.DAMAGE_OTHER && pathType != BlockPathTypes.DAMAGE_CAUTIOUS);
+                    final BlockPathTypes BlockPathTypes = com.github.alexthe666.citadel.server.entity.collision.CustomCollisionsNodeProcessor.getBlockPathTypeFromState(block, world, pos);
+                    return BlockPathTypes == null || (BlockPathTypes != BlockPathTypes.DANGER_FIRE && BlockPathTypes != BlockPathTypes.DANGER_OTHER && BlockPathTypes != BlockPathTypes.DANGER_POWDER_SNOW && BlockPathTypes != BlockPathTypes.DAMAGE_FIRE && BlockPathTypes != BlockPathTypes.DAMAGE_OTHER && BlockPathTypes != BlockPathTypes.DAMAGE_CAUTIOUS);
                 }
                 return false;
             }

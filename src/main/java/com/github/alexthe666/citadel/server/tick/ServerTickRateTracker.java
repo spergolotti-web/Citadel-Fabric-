@@ -45,7 +45,7 @@ public class ServerTickRateTracker extends TickRateTracker {
     }
 
     public int getServerTickLengthMs() {
-        int i = MinecraftServer.MS_PER_TICK;
+        int i = 50; // milliseconds per tick
         for (TickRateModifier modifier : tickRateModifierList) {
             if (modifier.getType() == TickRateModifierType.GLOBAL) {
                 i *= modifier.getTickRateMultiplier();

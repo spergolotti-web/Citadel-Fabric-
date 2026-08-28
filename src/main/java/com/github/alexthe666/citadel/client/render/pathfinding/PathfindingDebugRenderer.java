@@ -6,7 +6,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PathfindingDebugRenderer {
-    public static final RenderBuffers renderBuffers = new RenderBuffers();
-    private static final MultiBufferSource.BufferSource renderBuffer = renderBuffers.bufferSource();
+    private static final MultiBufferSource.BufferSource renderBuffer = Minecraft.getInstance().renderBuffers().bufferSource();
     /**
      * Set of visited nodes.
      */

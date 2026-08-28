@@ -21,7 +21,7 @@ accessible class net/minecraft/client/renderer/block/model/ItemTransform$Deseria
 accessible method net/minecraft/client/renderer/block/model/ItemTransform$Deserializer <init> ()V
 accessible class net/minecraft/client/renderer/block/model/ItemTransforms$Deserializer
 accessible method net/minecraft/client/renderer/block/model/ItemTransforms$Deserializer <init> ()V
-# ClientTickRateTracker accesses timer (1.20.1 Timer is in client package)
+# ClientTickRateTracker accesses timer (1.20.1 Timer)
 mutable field net/minecraft/client/Minecraft timer Lnet/minecraft/client/Timer;
 mutable field net/minecraft/client/Timer msPerTick F
 # ClientProxy screen callbacks and confirm screen fields
@@ -31,6 +31,9 @@ mutable field net/minecraft/client/gui/screens/ConfirmScreen callback Lit/unimi/
 # PrimaryLevelDataMixin NoiseBasedChunkGenerator.settings
 mutable field net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator settings Lnet/minecraft/core/Holder;
 # AdvancedPathNavigate NodeEvaluator dimensions
+accessible field net/minecraft/world/level/pathfinder/NodeEvaluator entityWidth I
+accessible field net/minecraft/world/level/pathfinder/NodeEvaluator entityHeight I
+accessible field net/minecraft/world/level/pathfinder/NodeEvaluator entityDepth I
 mutable field net/minecraft/world/level/pathfinder/NodeEvaluator entityWidth I
 mutable field net/minecraft/world/level/pathfinder/NodeEvaluator entityHeight I
 mutable field net/minecraft/world/level/pathfinder/NodeEvaluator entityDepth I
@@ -41,3 +44,4 @@ accessible class net/minecraft/world/level/levelgen/SurfaceRules$TestRuleSource
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource
 # BiomeConditionSource.biomes and StructureTemplatePool.templates/rawTemplates accessed via reflection (1.20.1 field names/descriptors vary)
+# PathingStuckHandler uses MethodHandle for BlockBehaviour.canSurvive (no access widener in 1.21.1)

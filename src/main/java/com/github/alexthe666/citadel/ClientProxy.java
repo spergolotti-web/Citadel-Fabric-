@@ -83,7 +83,7 @@ public class ClientProxy extends ServerProxy {
         }
         net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback.EVENT.register(context -> {
             try {
-                context.register(new ResourceLocation("citadel:rendertype_rainbow_aura"), DefaultVertexFormat.POSITION_COLOR_TEX, CitadelInternalShaders::setRenderTypeRainbowAura);
+                context.register(new ResourceLocation("citadel:rendertype_rainbow_aura"), DefaultVertexFormat.POSITION_TEX_COLOR, CitadelInternalShaders::setRenderTypeRainbowAura);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }
@@ -154,7 +154,7 @@ public class ClientProxy extends ServerProxy {
                                 Object listener = listenerField.get(confirmBackupScreen);
                                 listener.getClass().getMethod("proceed", boolean.class, boolean.class).invoke(listener, false, true);
                             } catch (Exception e) {
-                                Citadel.LOGGER.warn("Citadel: could not invoke BackupConfirmScreen.listener.proceed", e);
+                                Citadel.LOGGER.warn("Citadel: could not invoke BackupConfirmScreen.onProceed.proceed", e);
                             }
                         }
                     }
@@ -271,7 +271,7 @@ public class ClientProxy extends ServerProxy {
     public float getMouseOverProgress(ItemStack itemStack) {
         float prev = prevMouseOverProgresses.getOrDefault(itemStack, 0F);
         float current = mouseOverProgresses.getOrDefault(itemStack, 0F);
-        float lerped = prev + (current - prev) * Minecraft.getInstance().getFrameTime();
+        float lerped = prev + (current - prev) * ((com.github.alexthe666.citadel.mixin.client.MinecraftAccessor) Minecraft.getInstance()).citadel$getTimer().partialTick;
         float maxTime = 5F;
         if (itemStack.getItem() instanceof ItemWithHoverAnimation hoverOver) {
             maxTime = hoverOver.getMaxHoverOverTime(itemStack);

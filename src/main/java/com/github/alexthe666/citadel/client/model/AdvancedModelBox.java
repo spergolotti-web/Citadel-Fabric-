@@ -286,6 +286,7 @@ public class AdvancedModelBox extends BasicModelPart {
                 float lvt_19_1_ = lvt_17_1_.y();
                 float lvt_20_1_ = lvt_17_1_.z();
 
+                int colorARGB = ((int)(p_228306_8_ * 255) << 24) | ((int)(p_228306_5_ * 255) << 16) | ((int)(p_228306_6_ * 255) << 8) | (int)(p_228306_7_ * 255);
                 for (int lvt_21_1_ = 0; lvt_21_1_ < 4; ++lvt_21_1_) {
                     TabulaModelRenderUtils.PositionTextureVertex lvt_22_1_ = lvt_16_1_.vertexPositions[lvt_21_1_];
                     float lvt_23_1_ = lvt_22_1_.position.x() / 16.0F;
@@ -293,7 +294,13 @@ public class AdvancedModelBox extends BasicModelPart {
                     float lvt_25_1_ = lvt_22_1_.position.z() / 16.0F;
                     Vector4f lvt_26_1_ = new Vector4f(lvt_23_1_, lvt_24_1_, lvt_25_1_, 1.0F);
                     lvt_26_1_.mul(lvt_9_1_);
-                    p_228306_2_.vertex(lvt_26_1_.x(), lvt_26_1_.y(), lvt_26_1_.z(), p_228306_5_, p_228306_6_, p_228306_7_, p_228306_8_, lvt_22_1_.textureU, lvt_22_1_.textureV, p_228306_4_, p_228306_3_, lvt_18_1_, lvt_19_1_, lvt_20_1_);
+                    p_228306_2_.vertex(lvt_26_1_.x(), lvt_26_1_.y(), lvt_26_1_.z())
+                            .color(colorARGB)
+                            .uv(lvt_22_1_.textureU, lvt_22_1_.textureV)
+                            .overlayCoords(p_228306_4_)
+                            .uv2(p_228306_3_)
+                            .normal(lvt_18_1_, lvt_19_1_, lvt_20_1_)
+                            .endVertex();
                 }
             }
         }

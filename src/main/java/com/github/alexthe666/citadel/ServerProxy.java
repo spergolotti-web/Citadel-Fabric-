@@ -27,7 +27,7 @@ public class ServerProxy {
                 ServerTickRateTracker tickRateTracker = citadelServerData.getOrCreateTickRateTracker();
                 if (server instanceof ModifiableTickRateServer modifiableServer) {
                     long l = tickRateTracker.getServerTickLengthMs();
-                    if (l == MinecraftServer.MS_PER_TICK) {
+                    if (l == 50L) {
                         modifiableServer.resetGlobalTickLengthMs();
                     } else {
                         modifiableServer.setGlobalTickLengthMs(tickRateTracker.getServerTickLengthMs());

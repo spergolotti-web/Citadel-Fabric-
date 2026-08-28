@@ -80,7 +80,7 @@ public class EntityLinkButton extends Button {
     public void renderEntityInInventory(GuiGraphics guiGraphics, int xPos, int yPos, float scale, Quaternionf rotation, Entity entity) {
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(xPos, yPos, 50.0D);
-        guiGraphics.pose().mulPoseMatrix((new Matrix4f()).scaling(scale, scale, (-scale)));
+        guiGraphics.pose().scale(scale, scale, -scale);
         guiGraphics.pose().mulPose(rotation);
 
         Vector3f light0 = new Vector3f(1, -1.0F, -1.0F).normalize();

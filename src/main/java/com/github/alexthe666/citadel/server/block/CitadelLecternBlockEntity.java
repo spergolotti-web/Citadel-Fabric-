@@ -130,6 +130,7 @@ public class CitadelLecternBlockEntity extends BlockEntity implements Clearable,
         return this.hasBook() ? 1 : 0;
     }
 
+    @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         if (tag.contains("Book", 10)) {
@@ -139,6 +140,7 @@ public class CitadelLecternBlockEntity extends BlockEntity implements Clearable,
         }
     }
 
+    @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         if (!this.getBook().isEmpty()) {
@@ -158,6 +160,7 @@ public class CitadelLecternBlockEntity extends BlockEntity implements Clearable,
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
     }

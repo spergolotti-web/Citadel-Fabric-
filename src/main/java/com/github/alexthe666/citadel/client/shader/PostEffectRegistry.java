@@ -101,7 +101,7 @@ public class PostEffectRegistry {
     public static void processEffects(RenderTarget mainTarget, float f) {
         for (PostEffect postEffect : postEffects.values()) {
             if (postEffect.isEnabled() && postEffect.postChain != null) {
-                postEffect.postChain.process(Minecraft.getInstance().getFrameTime());
+                postEffect.postChain.process(((com.github.alexthe666.citadel.mixin.client.MinecraftAccessor) Minecraft.getInstance()).citadel$getTimer().partialTick);
                 mainTarget.bindWrite(false);
             }
         }

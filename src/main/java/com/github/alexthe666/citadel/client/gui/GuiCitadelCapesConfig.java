@@ -39,6 +39,7 @@ public class GuiCitadelCapesConfig extends OptionsSubScreen {
     }
 
 
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(guiGraphics);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
@@ -57,7 +58,7 @@ public class GuiCitadelCapesConfig extends OptionsSubScreen {
         float f1 = angleYComponent;
         PoseStack posestack = RenderSystem.getModelViewStack();
         posestack.pushPose();
-        posestack.translate(x, y, 1050.0D);
+        posestack.translate((float) x, (float) y, 1050.0F);
         posestack.scale(1.0F, 1.0F, -1.0F);
         RenderSystem.applyModelViewMatrix();
         PoseStack posestack1 = new PoseStack();

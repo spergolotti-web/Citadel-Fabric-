@@ -7,13 +7,13 @@ import com.github.alexthe666.citadel.server.message.PropertiesMessage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 
 public class GuiCitadelPatreonConfig extends OptionsSubScreen {
 
@@ -39,20 +39,16 @@ public class GuiCitadelPatreonConfig extends OptionsSubScreen {
     }
 
     private void setSliderValue(int i, float sliderValue) {
-        boolean flag = false;
         CompoundTag tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
         if (i == 0) {
             rotateDist = roundTo(sliderValue, 3);
             tag.putFloat("CitadelRotateDistance", rotateDist);
-            //distSlider.isHovered = false;
         } else if (i == 1) {
             rotateSpeed = roundTo(sliderValue, 3);
             tag.putFloat("CitadelRotateSpeed", rotateSpeed);
-            //speedSlider.isHovered = false;
         } else {
             rotateHeight = roundTo(sliderValue, 3);
             tag.putFloat("CitadelRotateHeight", rotateHeight);
-            //heightSlider.isHovered = false;
         }
         CitadelEntityData.setCitadelTag(Minecraft.getInstance().player, tag);
         Citadel.sendMSGToServer(new PropertiesMessage("CitadelPatreonConfig", tag, Minecraft.getInstance().player.getId()));
@@ -62,6 +58,7 @@ public class GuiCitadelPatreonConfig extends OptionsSubScreen {
         return value;
     }
 
+    @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(guiGraphics);
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);

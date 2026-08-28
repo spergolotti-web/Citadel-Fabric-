@@ -44,9 +44,9 @@ public class CitadelLecternRenderer implements BlockEntityRenderer<CitadelLecter
             int pageG = (bookData.getPageColor() & 0xFF00) >> 8;
             int pageB = (bookData.getPageColor() & 0xFF);
             VertexConsumer pages = bufferSource.getBuffer(RenderType.entityCutoutNoCull(BOOK_PAGE_TEXTURE));
-            this.bookModel.render(poseStack, pages, i, j, pageR / 255F, pageG / 255F, pageB / 255F, 1.0F);
+            this.bookModel.render(poseStack, pages, i, j, pageR / 255.0F, pageG / 255.0F, pageB / 255.0F, 1.0F);
             VertexConsumer binding = bufferSource.getBuffer(RenderType.entityCutoutNoCull(BOOK_BINDING_TEXTURE));
-            this.bookModel.render(poseStack, binding, i, j, bindingR / 255F, bindingG / 255F, bindingB / 255F, 1.0F);
+            this.bookModel.render(poseStack, binding, i, j, bindingR / 255.0F, bindingG / 255.0F, bindingB / 255.0F, 1.0F);
             poseStack.popPose();
         }
     }

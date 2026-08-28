@@ -162,6 +162,7 @@ public class BasicModelPart {
                 float f1 = vector3f.y();
                 float f2 = vector3f.z();
 
+                int colorARGB = ((int)(alpha * 255) << 24) | ((int)(red * 255) << 16) | ((int)(green * 255) << 8) | (int)(blue * 255);
                 for (int i = 0; i < 4; ++i) {
                     BasicModelPart.PositionTextureVertex BasicModelPart$positiontexturevertex = BasicModelPart$texturedquad.vertexPositions[i];
                     float f3 = BasicModelPart$positiontexturevertex.position.x() / 16.0F;
@@ -169,7 +170,13 @@ public class BasicModelPart {
                     float f5 = BasicModelPart$positiontexturevertex.position.z() / 16.0F;
                     Vector4f vector4f = new Vector4f(f3, f4, f5, 1.0F);
                     vector4f.mul(matrix4f);
-                    bufferIn.vertex(vector4f.x(), vector4f.y(), vector4f.z(), red, green, blue, alpha, BasicModelPart$positiontexturevertex.textureU, BasicModelPart$positiontexturevertex.textureV, packedOverlayIn, packedLightIn, f, f1, f2);
+                    bufferIn.vertex(vector4f.x(), vector4f.y(), vector4f.z())
+                            .color(colorARGB)
+                            .uv(BasicModelPart$positiontexturevertex.textureU, BasicModelPart$positiontexturevertex.textureV)
+                            .overlayCoords(packedOverlayIn)
+                            .uv2(packedLightIn)
+                            .normal(f, f1, f2)
+                            .endVertex();
                 }
             }
         }

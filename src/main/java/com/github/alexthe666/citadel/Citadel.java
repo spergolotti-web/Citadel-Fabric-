@@ -43,8 +43,19 @@ public class Citadel implements ModInitializer {
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     public static final ResourceLocation PACKET_CHANNEL = new ResourceLocation(MOD_ID, "main_channel");
 
-    public static ServerProxy PROXY = FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.CLIENT ? new ClientProxy() : new ServerProxy();
+    public static ServerProxy PROXY = createProxy();
     public static List<String> PATREONS = new ArrayList<>();
+
+    private static ServerProxy createProxy() {
+        if (FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.CLIENT) {
+            try {
+                return (ServerProxy) Class.forName("com.github.alexthe666.citadel.ClientProxy").getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Failed to create Citadel client proxy", e);
+            }
+        }
+        return new ServerProxy();
+    }
 
     public static final Item DEBUG_ITEM = registerItem("debug", new ItemCitadelDebug(new Item.Properties()));
     public static final Item CITADEL_BOOK = registerItem("citadel_book", new ItemCitadelBook(new Item.Properties().stacksTo(1)));

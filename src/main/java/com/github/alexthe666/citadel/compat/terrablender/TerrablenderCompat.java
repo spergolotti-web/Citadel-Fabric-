@@ -11,31 +11,45 @@ public class TerrablenderCompat {
 
     public static void setup() {
         try {
-            Class<?> surfaceRuleManager = Class.forName("terrablender.api.SurfaceRuleManager");
-            Object overworld = getEnum(surfaceRuleManager, "RuleCategory", "OVERWORLD");
-            Object beforeBedrock = getEnum(surfaceRuleManager, "RuleStage", "BEFORE_BEDROCK");
+            Class<?> surfaceRuleManagerClass = Class.forName("terrablender.api.SurfaceRuleManager");
+            Class<?> ruleCategoryClass = Class.forName("terrablender.api.SurfaceRuleManager$RuleCategory");
+            Class<?> ruleStageClass = Class.forName("terrablender.api.SurfaceRuleManager$RuleStage");
+
+            Object overworld = getEnum(ruleCategoryClass, "OVERWORLD");
+            Object beforeBedrock = getEnum(ruleStageClass, "BEFORE_BEDROCK");
 
             Map<String, SurfaceRules.RuleSource> vanillaBiomeRules = SurfaceRulesManager.getOverworldRulesByBiomeForTerrablender(true);
-            Method addToDefault = surfaceRuleManager.getMethod("addToDefaultSurfaceRulesAtStage", overworld.getClass().getSuperclass(), beforeBedrock.getClass().getSuperclass(), int.class, SurfaceRules.RuleSource.class);
+            Method addToDefault = surfaceRuleManagerClass.getMethod(
+                    "addToDefaultSurfaceRulesAtStage",
+                    ruleCategoryClass,
+                    ruleStageClass,
+                    int.class,
+                    SurfaceRules.RuleSource.class
+            );
             for (Map.Entry<String, SurfaceRules.RuleSource> entry : vanillaBiomeRules.entrySet()) {
                 addToDefault.invoke(null, overworld, beforeBedrock, 0, entry.getValue());
             }
             Citadel.LOGGER.info("Added {} vanilla biome surface rule types via terrablender", vanillaBiomeRules.size());
 
             Map<String, SurfaceRules.RuleSource> moddedBiomeRules = SurfaceRulesManager.getOverworldRulesByBiomeForTerrablender(false);
-            Method addSurfaceRules = surfaceRuleManager.getMethod("addSurfaceRules", overworld.getClass().getSuperclass(), String.class, SurfaceRules.RuleSource.class);
+            Method addSurfaceRules = surfaceRuleManagerClass.getMethod(
+                    "addSurfaceRules",
+                    ruleCategoryClass,
+                    String.class,
+                    SurfaceRules.RuleSource.class
+            );
             for (Map.Entry<String, SurfaceRules.RuleSource> entry : moddedBiomeRules.entrySet()) {
                 addSurfaceRules.invoke(null, overworld, entry.getKey(), entry.getValue());
             }
             Citadel.LOGGER.info("Added {} modded biome surface rule types via terrablender", moddedBiomeRules.size());
-        } catch (Exception e) {
+        } catch (ReflectiveOperationException e) {
             Citadel.LOGGER.error("Failed to setup Terrablender compat", e);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static Object getEnum(Class<?> apiClass, String innerName, String constant) throws Exception {
-        Class<?> inner = Class.forName(apiClass.getName() + "$" + innerName);
-        return Enum.valueOf((Class<Enum>) inner, constant);
+    private static <T extends Enum<T>> T getEnum(Class<?> enumClass, String constant) {
+        @SuppressWarnings("unchecked")
+        Class<T> typed = (Class<T>) enumClass;
+        return Enum.valueOf(typed, constant);
     }
 }

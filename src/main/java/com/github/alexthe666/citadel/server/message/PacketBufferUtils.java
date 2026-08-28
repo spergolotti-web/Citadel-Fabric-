@@ -133,8 +133,7 @@ public class PacketBufferUtils {
      * @param stack The itemstack to write
      */
     public static void writeItemStack(ByteBuf to, ItemStack stack) {
-        FriendlyByteBuf pb = new FriendlyByteBuf(to);
-        pb.writeItem(stack);
+        wrap(to).writeItem(stack);
     }
 
     /**
@@ -144,13 +143,18 @@ public class PacketBufferUtils {
      * @return The itemstack read
      */
     public static ItemStack readItemStack(ByteBuf from) {
-        FriendlyByteBuf pb = new FriendlyByteBuf(from);
         try {
-            return pb.readItem();
+            return wrap(from).readItem();
         } catch (Exception e) {
-            // Unpossible?
             throw new RuntimeException(e);
         }
+    }
+
+    private static FriendlyByteBuf wrap(ByteBuf buf) {
+        if (buf instanceof FriendlyByteBuf friendly) {
+            return friendly;
+        }
+        return new FriendlyByteBuf(buf);
     }
 
     /**
@@ -160,8 +164,7 @@ public class PacketBufferUtils {
      * @param tag The tag to write
      */
     public static void writeTag(ByteBuf to, CompoundTag tag) {
-        FriendlyByteBuf pb = new FriendlyByteBuf(to);
-        pb.writeNbt(tag);
+        wrap(to).writeNbt(tag);
     }
 
     /**
@@ -172,11 +175,9 @@ public class PacketBufferUtils {
      */
     @Nullable
     public static CompoundTag readTag(ByteBuf from) {
-        FriendlyByteBuf pb = new FriendlyByteBuf(from);
         try {
-            return pb.readNbt();
+            return wrap(from).readNbt();
         } catch (Exception e) {
-            // Unpossible?
             throw new RuntimeException(e);
         }
     }

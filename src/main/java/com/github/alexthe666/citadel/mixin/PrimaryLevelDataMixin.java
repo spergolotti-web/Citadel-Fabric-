@@ -23,13 +23,13 @@ import java.util.function.Consumer;
 public class PrimaryLevelDataMixin {
 
     @Inject(at = @At("HEAD"), remap = CitadelConstants.REMAPREFS,
-            method = "Lnet/minecraft/world/level/storage/PrimaryLevelData;setTagData(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/CompoundTag;)V")
+            method = "setTagData")
     private void citadel_preSetTagData(RegistryAccess registryAccess, CompoundTag compoundTag, CompoundTag compoundTag1, CallbackInfo ci) {
         citadelUpdateSurfaceRules(registryAccess, true);
     }
 
     @Inject(at = @At("TAIL"), remap = CitadelConstants.REMAPREFS,
-            method = "Lnet/minecraft/world/level/storage/PrimaryLevelData;setTagData(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/nbt/CompoundTag;)V")
+            method = "setTagData")
     private void citadel_postSetTagData(RegistryAccess registryAccess, CompoundTag compoundTag, CompoundTag compoundTag1, CallbackInfo ci) {
         citadelUpdateSurfaceRules(registryAccess, false);
     }

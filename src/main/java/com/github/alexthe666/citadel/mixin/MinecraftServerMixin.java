@@ -26,7 +26,7 @@ public abstract class MinecraftServerMixin implements ModifiableTickRateServer {
     private long masterMs;
 
     @Inject(
-            method = "Lnet/minecraft/server/MinecraftServer;<init>(Ljava/lang/Thread;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lnet/minecraft/server/packs/repository/PackRepository;Lnet/minecraft/server/WorldStem;Ljava/net/Proxy;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/server/Services;Lnet/minecraft/server/level/progress/ChunkProgressListenerFactory;)V",
+            method = "<init>",
             at = @At("TAIL")
     )
     private void citadel_init(Thread thread, LevelStorageSource.LevelStorageAccess levelStorageAccess, PackRepository packRepository, WorldStem worldStem, Proxy proxy, DataFixer dataFixer, Services services, ChunkProgressListenerFactory chunkProgressListenerFactory, CallbackInfo ci) {
@@ -34,7 +34,7 @@ public abstract class MinecraftServerMixin implements ModifiableTickRateServer {
     }
 
     @Inject(
-            method = {"Lnet/minecraft/server/MinecraftServer;runServer()V"},
+            method = "runServer",
             remap = CitadelConstants.REMAPREFS,
             at = @At(
                     value = "INVOKE",
@@ -51,10 +51,9 @@ public abstract class MinecraftServerMixin implements ModifiableTickRateServer {
     }
 
     @ModifyConstant(
-            method = {"Lnet/minecraft/server/MinecraftServer;runServer()V"},
-            remap = CitadelConstants.REMAPREFS,
+            method = "runServer",
             constant = @Constant(longValue = 50L),
-            expect = 4)
+            require = 0)
     private long citadel_serverMsPerTick(long value) {
         return modifiedMsPerTick == -1 ? value : modifiedMsPerTick;
     }

@@ -9,13 +9,18 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Node;
 import net.minecraft.world.phys.Vec3;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +30,19 @@ import java.util.function.BiPredicate;
  * Stuck handler for pathing
  */
 public class PathingStuckHandler implements IStuckHandler {
+
+    private static final MethodHandle LADDER_CAN_SURVIVE;
+
+    static {
+        MethodHandle h = null;
+        try {
+            h = MethodHandles.lookup().findVirtual(BlockBehaviour.class, "canSurvive",
+                    MethodType.methodType(boolean.class, BlockState.class, LevelReader.class, BlockPos.class));
+        } catch (Throwable ignored) {
+        }
+        LADDER_CAN_SURVIVE = h;
+    }
+
     /**
      * The distance at which we consider a target to arrive
      */
@@ -430,11 +448,20 @@ public class PathingStuckHandler implements IStuckHandler {
         if (state.getBlock() != Blocks.LADDER && !state.canOcclude() && world.getFluidState(pos).isEmpty()) {
             for (final Direction dir : directions) {
                 final BlockState toPlace = Blocks.LADDER.defaultBlockState().setValue(LadderBlock.FACING, dir.getOpposite());
-                if (world.getBlockState(pos.relative(dir)).isSolid() && Blocks.LADDER.canSurvive(toPlace, world, pos)) {
+                if (world.getBlockState(pos.relative(dir)).isSolid() && ladderCanSurvive(toPlace, world, pos)) {
                     world.setBlockAndUpdate(pos, toPlace);
                     break;
                 }
             }
+        }
+    }
+
+    private static boolean ladderCanSurvive(BlockState toPlace, Level world, BlockPos pos) {
+        if (LADDER_CAN_SURVIVE == null) return false;
+        try {
+            return (boolean) LADDER_CAN_SURVIVE.invoke(Blocks.LADDER, toPlace, world, pos);
+        } catch (Throwable e) {
+            return false;
         }
     }
 

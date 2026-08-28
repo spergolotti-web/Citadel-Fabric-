@@ -22,18 +22,18 @@ public class LivingEntityRendererMixin {
     protected EntityModel model;
 
     @Inject(
-            method = {"Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;setupRotations(Lnet/minecraft/world/entity/LivingEntity;Lcom/mojang/blaze3d/vertex/PoseStack;FFF)V"},
+            method = "setupRotations",
             remap = CitadelConstants.REMAPREFS,
             at = @At(value = "RETURN")
     )
-    protected void citadel_setupRotations(LivingEntity livingEntity, PoseStack poseStack, float ageInTicks, float bodyYRot, float partialTick, CallbackInfo ci) {
-        EventLivingRenderer.SetupRotations event = new EventLivingRenderer.SetupRotations(livingEntity, model, poseStack, bodyYRot, partialTick);
+    protected void citadel_setupRotations(LivingEntity livingEntity, PoseStack poseStack, float ageInTicks, float netHeadYaw, float partialTick, CallbackInfo ci) {
+        EventLivingRenderer.SetupRotations event = new EventLivingRenderer.SetupRotations(livingEntity, model, poseStack, netHeadYaw, partialTick);
         EventLivingRenderer.SetupRotations.post(event);
 
     }
 
     @Inject(
-            method = {"Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             at = @At(
                     value = "INVOKE",
@@ -48,7 +48,7 @@ public class LivingEntityRendererMixin {
     }
 
     @Inject(
-            method = {"Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             at = @At(
                     value = "INVOKE",
@@ -62,7 +62,7 @@ public class LivingEntityRendererMixin {
     }
 
     @Inject(
-            method = {"Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             at = @At(value = "RETURN")
     )

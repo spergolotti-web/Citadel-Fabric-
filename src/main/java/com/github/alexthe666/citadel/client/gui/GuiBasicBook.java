@@ -147,7 +147,7 @@ public abstract class GuiBasicBook extends Screen {
 
         guiGraphics.pose().pushPose();
         guiGraphics.pose().translate(posX, posY, zOff);
-        guiGraphics.pose().mulPoseMatrix((new Matrix4f()).scaling(scale, scale, -scale));
+        guiGraphics.pose().scale(scale, scale, -scale);
         Quaternionf quaternion = Axis.ZP.rotationDegrees(180F);
         Quaternionf quaternion1 = Axis.XP.rotationDegrees(f1 * 20.0F);
         quaternion.mul(quaternion1);
@@ -327,9 +327,8 @@ public abstract class GuiBasicBook extends Screen {
     private Recipe getRecipeByName(String registryName) {
         try {
             RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
-            if (manager.byKey(new ResourceLocation(registryName)).isPresent()) {
-                return manager.byKey(new ResourceLocation(registryName)).get();
-            }
+            ResourceLocation id = new ResourceLocation(registryName);
+            return manager.byKey(id).orElse(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -430,7 +429,7 @@ public abstract class GuiBasicBook extends Screen {
                 Entity model = null;
                 EntityType type = BuiltInRegistries.ENTITY_TYPE.get(new ResourceLocation(data.getEntity()));
                 if (type != null) {
-                    model = renderedEntites.putIfAbsent(data.getEntity(), type.create(Minecraft.getInstance().level));
+                    model = renderedEntites.computeIfAbsent(data.getEntity(), key -> type.create(Minecraft.getInstance().level));
                 }
                 if (model != null) {
                     float scale = (float) data.getScale();

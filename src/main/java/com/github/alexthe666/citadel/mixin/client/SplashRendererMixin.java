@@ -27,7 +27,7 @@ public class SplashRendererMixin {
     private int splashTextColor = -1;
 
     @Inject(
-            method = {"Lnet/minecraft/client/gui/components/SplashRenderer;render(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/client/gui/Font;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             at = @At(
                     value = "INVOKE",
@@ -36,7 +36,7 @@ public class SplashRendererMixin {
             ))
     protected void citadel_preRenderSplashText(GuiGraphics guiGraphics, int width, Font font, int loadProgress, CallbackInfo ci) {
         guiGraphics.pose().pushPose();
-        EventRenderSplashText.Pre event = new EventRenderSplashText.Pre(splash, guiGraphics, Minecraft.getInstance().getFrameTime(), 16776960);
+        EventRenderSplashText.Pre event = new EventRenderSplashText.Pre(splash, guiGraphics, ((com.github.alexthe666.citadel.mixin.client.MinecraftAccessor) Minecraft.getInstance()).citadel$getTimer().partialTick, 16776960);
         EventRenderSplashText.Pre.invokePre(event);
 
         if (event.getResult() == EventRenderSplashText.Result.ALLOW) {
@@ -46,7 +46,7 @@ public class SplashRendererMixin {
     }
 
     @Inject(
-            method = {"Lnet/minecraft/client/gui/components/SplashRenderer;render(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/client/gui/Font;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             at = @At(
                     value = "INVOKE",
@@ -55,13 +55,13 @@ public class SplashRendererMixin {
             )
     )
     protected void citadel_postRenderSplashText(GuiGraphics guiGraphics, int width, Font font, int loadProgress, CallbackInfo ci) {
-        EventRenderSplashText.Post event = new EventRenderSplashText.Post(splash, guiGraphics, Minecraft.getInstance().getFrameTime());
+        EventRenderSplashText.Post event = new EventRenderSplashText.Post(splash, guiGraphics, ((com.github.alexthe666.citadel.mixin.client.MinecraftAccessor) Minecraft.getInstance()).citadel$getTimer().partialTick);
         EventRenderSplashText.Post.invokePost(event);
         guiGraphics.pose().popPose();
     }
 
     @ModifyConstant(
-            method = {"Lnet/minecraft/client/gui/components/SplashRenderer;render(Lnet/minecraft/client/gui/GuiGraphics;ILnet/minecraft/client/gui/Font;I)V"},
+            method = "render",
             remap = CitadelConstants.REMAPREFS,
             constant = @Constant(intValue = 16776960))
     private int citadel_splashTextColor(int value) {

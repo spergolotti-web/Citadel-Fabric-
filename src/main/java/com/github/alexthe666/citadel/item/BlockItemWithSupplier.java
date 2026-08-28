@@ -8,6 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ShulkerBoxBlock;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class BlockItemWithSupplier extends BlockItem {
 
     private final Block blockSupplier;
@@ -32,7 +37,12 @@ public class BlockItemWithSupplier extends BlockItem {
             CompoundTag compoundtag = getBlockEntityData(itemstack);
             if (compoundtag != null && compoundtag.contains("Items", 9)) {
                 ListTag listtag = compoundtag.getList("Items", 10);
-                ItemUtils.onContainerDestroyed(p_150700_, listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of));
+                List<ItemStack> stacks = new ArrayList<>();
+                for (int i = 0; i < listtag.size(); i++) {
+                    ItemStack stack = ItemStack.of(listtag.getCompound(i));
+                    if (stack != null && !stack.isEmpty()) stacks.add(stack);
+                }
+                ItemUtils.onContainerDestroyed(p_150700_, stacks.stream());
             }
         }
     }

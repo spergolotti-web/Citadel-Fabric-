@@ -8,9 +8,6 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class CitadelServerData extends SavedData {
 
     private static final String IDENTIFIER = "citadel_world_data";
@@ -36,7 +33,11 @@ public class CitadelServerData extends SavedData {
     @NotNull
     public static CitadelServerData get(MinecraftServer server) {
         DimensionDataStorage storage = server.getLevel(Level.OVERWORLD).getDataStorage();
-        CitadelServerData data = storage.computeIfAbsent((tag) -> new CitadelServerData(server, tag), () -> new CitadelServerData(server), IDENTIFIER);
+        CitadelServerData data = storage.computeIfAbsent(
+                tag -> new CitadelServerData(server, tag),
+                () -> new CitadelServerData(server),
+                IDENTIFIER
+        );
         data.setDirty();
         return data;
     }

@@ -67,12 +67,13 @@ public class SurfaceRulesManager {
     }
 
     /*
-        Needed for terrablender compatibility
+        Needed for terrablender compatibility. Uses reflection to avoid referencing private BiomeConditionSource at compile time.
      */
     @SuppressWarnings("unchecked")
-    private static Object getBiomesFromBiomeConditionSource(SurfaceRules.BiomeConditionSource biomeRule) {
+    private static Object getBiomesFromBiomeConditionSource(Object biomeRule) {
         try {
-            java.lang.reflect.Field f = SurfaceRules.BiomeConditionSource.class.getDeclaredField("biomes");
+            Class<?> cls = Class.forName("net.minecraft.world.level.levelgen.SurfaceRules$BiomeConditionSource");
+            java.lang.reflect.Field f = cls.getDeclaredField("biomes");
             f.setAccessible(true);
             return f.get(biomeRule);
         } catch (Exception e) {
@@ -83,7 +84,8 @@ public class SurfaceRulesManager {
     public static Map<String, SurfaceRules.RuleSource> getOverworldRulesByBiomeForTerrablender(boolean vanilla) {
         Map<String, SurfaceRules.RuleSource> map = new HashMap<>();
         for (SurfaceRules.RuleSource ruleSource : OVERWORLD_REGISTRY) {
-            if (ruleSource instanceof SurfaceRules.TestRuleSource testRuleSource && testRuleSource.ifTrue() instanceof SurfaceRules.BiomeConditionSource biomeRule) {
+            if (ruleSource instanceof SurfaceRules.TestRuleSource testRuleSource && testRuleSource.ifTrue().getClass().getName().equals("net.minecraft.world.level.levelgen.SurfaceRules$BiomeConditionSource")) {
+                Object biomeRule = testRuleSource.ifTrue();
                 Object biomes = getBiomesFromBiomeConditionSource(biomeRule);
                 if (biomes == null) continue;
                 boolean empty = biomes instanceof java.util.Collection && ((java.util.Collection<?>) biomes).isEmpty();

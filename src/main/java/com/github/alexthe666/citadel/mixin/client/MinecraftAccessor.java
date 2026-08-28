@@ -7,8 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * Accessor for Minecraft client's timer. Used by ClientTickRateTracker to set
- * msPerTick for tick rate modification. Mixin rewrites at runtime (intermediary);
- * no reflection in production.
+ * msPerTick for tick rate modification.
  */
 @Mixin(Minecraft.class)
 public interface MinecraftAccessor {
